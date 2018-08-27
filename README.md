@@ -1,8 +1,6 @@
 ## Akka Actor and Kafka
 
-You can use the [editor on GitHub](https://github.com/singhwarrior/my-blog/edit/gh-pages/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+AKKA Actor is a framework which is used to implement highly scalable systems.
 
 ### Markdown
 
