@@ -8,7 +8,6 @@ Event based Applications whether they belong to LAMBDA Architecture or KAPPA Arc
 So it is very much important, application should be able to limit the message in take rate, so that messages can reside at message source instead of getting consumed. This is called Back Pressure.
 
 ### Implementation of Back Pressure with AKKA Actor and Kafka
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ![blog.jpg](blog.jpg)
 
