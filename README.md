@@ -1,9 +1,17 @@
-## Akka Actor and Kafka
+## Event Based Application : Implementing Back Pressure
 
 AKKA Actor is a framework which is used to implement highly scalable systems.
 
-### Markdown
+### Back Pressure and its benifits
 
+Event based Applications whether they belong to LAMBDA Architecture or KAPPA Architecture need to have an important feature of back pressure. The reason is simple. If your processing rate is slower than messages getting produced, and the application keep on consuming the events then application will have all those messages in memory. Due to which following problems can happen:
+
+1. This may become a reason for the application to crash because the of memory exceeding from a limit. Which will eventually become the reason to loose all events which have been consumed
+2. Even if application is stopped in that case also all the messages will be lost.
+
+So it is very much important, application should be able to limit the message in take rate, so that messages can reside at message source instead of getting consumed. This is called Back Pressure.
+
+### Implementation of Back Pressure with AKKA Actor and Kafka
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
