@@ -1,7 +1,3 @@
-## Event Based Application : Implementing Back Pressure
-
-AKKA Actor is a framework which is used to implement highly scalable systems.
-
 ### Back Pressure and its benifits
 
 Event based Applications whether they belong to LAMBDA Architecture or KAPPA Architecture need to have an important feature of back pressure. The reason is simple. If your processing rate is slower than messages getting produced, and the application keep on consuming the events then application will have all those messages in memory. Due to which following problems can happen:
