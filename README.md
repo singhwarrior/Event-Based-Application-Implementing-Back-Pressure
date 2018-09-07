@@ -14,6 +14,8 @@ So it is very much important, application should be able to limit the message in
 ### Implementation of Back Pressure with AKKA Actor and Kafka
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
+![blog.jpg](blog.jpg)
+
 ```markdown
 Syntax highlighted code block
 
