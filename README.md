@@ -1,13 +1,16 @@
-### Back Pressure and its benifits
+## Back Pressure and its benifits
 
-Event based Applications whether they belong to LAMBDA Architecture or KAPPA Architecture need to have an important feature of back pressure. The reason is simple. If your processing rate is slower than messages getting produced, and the application keep on consuming the events then application will have all those messages in memory. Due to which following problems can happen:
+All event based applications need to have an important feature of back pressure. The reason is simple, If application processing rate is slower than the rate of its consumption, it can cause following problems:
 
-1. This may become a reason for the application to crash because the of memory exceeding from a limit. Which will eventually become the reason to loose all events which have been consumed
+1. Application may crash because the of memory exceeding from a limit. Which will eventually become the reason to loose all events which have been consumed
 2. Even if application is stopped in that case also all the messages will be lost.
 
-So it is very much important, application should be able to limit the message in take rate, so that messages can reside at message source instead of getting consumed. This is called Back Pressure.
+So it is very much important, application should be able to limit the message in-take rate, so that messages can reside at message source/broker instead of getting consumed. This is called Back Pressure.
 
-### Implementation of Back Pressure with AKKA Actor and Kafka
+## Farmeworks enabled with Back Pressure
+There are farmeworks like Spark Streaming and Akka Streaming which have back pressure feature available. Spark Streaming which is based on Lmabda Architecture and AKKA Streaming which is based on KAPPA Architecture, in both we can make sure that while implementing a pipeline, we can limit the rate at which we want to consume the messages.
+
+## Implementation of Back Pressure with AKKA Actor and Kafka
 
 ![blog.jpg](blog.jpg)
 
