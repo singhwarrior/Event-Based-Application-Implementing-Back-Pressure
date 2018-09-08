@@ -30,34 +30,35 @@ Above diagram contains following Actors:
 
 This is the actor which uses Kafka High Level Consumer API. It uses **createKafkaConsumer** function as shown in following code snnipet. Here the important point to be noted is, consumer group is required here.
 
-```scala
-object KafkaUtil {
-  def createKafkaConsumer(properties: Properties): KafkaConsumer[String, String] = {
-    val props = new Properties()
-    props.put("bootstrap.servers", properties.getProperty(ConfigConstants.KAFKA_BOOT_SERVERS));
-    props.put("group.id", properties.getProperty(ConfigConstants.KAFKA_GROUP_ID));
-    props.put("auto.offset.reset", "latest");
-    props.put("enable.auto.commit", "false");
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    val consumer = new KafkaConsumer[String, String](props)
-    consumer.subscribe(properties.getProperty(ConfigConstants.KAFKA_TOPIC).split(",").toList.asJava)
-    consumer
-  }
-  
-  def createKafkaConsumer2(properties: Properties): KafkaConsumer[String, String] = {
-    val props = new Properties()
-    props.put("bootstrap.servers", properties.getProperty(ConfigConstants.KAFKA_BOOT_SERVERS));
-    props.put("auto.offset.reset", "latest");
-    props.put("enable.auto.commit", "false");
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    val consumer = new KafkaConsumer[String, String](props)
-    consumer
-  }  
-}
-```
- Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. See the receive method which uses a function called 
+	```scala
+	object KafkaUtil {
+	  def createKafkaConsumer(properties: Properties): KafkaConsumer[String, String] = {
+	    val props = new Properties()
+	    props.put("bootstrap.servers", properties.getProperty(ConfigConstants.KAFKA_BOOT_SERVERS));
+	    props.put("group.id", properties.getProperty(ConfigConstants.KAFKA_GROUP_ID));
+	    props.put("auto.offset.reset", "latest");
+	    props.put("enable.auto.commit", "false");
+	    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+	    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+	    val consumer = new KafkaConsumer[String, String](props)
+	    consumer.subscribe(properties.getProperty(ConfigConstants.KAFKA_TOPIC).split(",").toList.asJava)
+	    consumer
+	  }
+
+	  def createKafkaConsumer2(properties: Properties): KafkaConsumer[String, String] = {
+	    val props = new Properties()
+	    props.put("bootstrap.servers", properties.getProperty(ConfigConstants.KAFKA_BOOT_SERVERS));
+	    props.put("auto.offset.reset", "latest");
+	    props.put("enable.auto.commit", "false");
+	    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+	    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+	    val consumer = new KafkaConsumer[String, String](props)
+	    consumer
+	  }  
+	}
+	```
+
+Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. See the receive method which uses a function called 
 **consumeLimitedBatch()** which is explained latter.
 
 ```scala
