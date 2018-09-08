@@ -68,8 +68,6 @@ class Ticker(properties: Properties, consumer: KafkaConsumer[String, String]) ex
         		tp -> c.position(tp)
       		}.toMap
     	}
-
-    	// don't actually want to consume any messages, so pause all partitions
     	c.pause(this.currentOffsets.keySet.toList: _*)
   	}
 
@@ -94,9 +92,7 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
     val newPartitions = parts.diff(currentOffsets.keySet)
     // position for new partitions determined by auto.offset.reset if no commit
     currentOffsets = currentOffsets ++ newPartitions.map(tp => tp -> c.position(tp)).toMap
-    // don't want to consume messages, so pause
     c.pause(newPartitions.toList: _*)
-    // find latest available offsets
     c.seekToEnd(currentOffsets.keySet.toList: _*)
     parts.map(tp => tp -> c.position(tp)).toMap
   }
