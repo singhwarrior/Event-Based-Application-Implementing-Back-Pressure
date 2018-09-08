@@ -28,7 +28,7 @@ Above diagram contains following Actors:
 
 ### Ticker Actor 
 
-This is the actor which uses Kafka High Level Consumer API. It uses **createKafkaConsumer** functiom in following code snnipet. Here the important point to be noted is, consumer group is required here.
+This is the actor which uses Kafka High Level Consumer API. It uses **createKafkaConsumer** function as shown in following code snnipet. Here the important point to be noted is, consumer group is required here.
 
 ```scala
 object KafkaUtil {
@@ -58,7 +58,8 @@ object KafkaUtil {
 }
 ```
 
-Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. 
+Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. See the receive method which uses a function called 
+**consumeLimitedBatch()** which is explained latter.
 
 ```scala
 object Ticker {
@@ -121,7 +122,7 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
   }
 ```  
 
-- Prepares an OffsetRanges object and send it to WorkerRouter Actor
+- Prepares an OffsetRanges object and send it to WorkerRouter Actor. **OffsetRanges** object contains a list of **OffsetRange** objects. Each **OffsetRange** object contains a partition of a given topic, starting offset and end offset as shown in following code snippet.
 
 ```scala
  def consumeLimitedBatch() = {
@@ -145,7 +146,7 @@ val ticker = actorSystem.actorOf(Ticker.props(properties, consumer), "ticker")
 ```
 ### WorkerRouter Actor
 
-As shown in the diagram, Ticker Actor gets the current offset and until offset for each partition and sends it to WorkerRouter actor. WorkerRouter actor after getting message from Ticker actor, consumes the actual messages from the kafka topic using simple consumer api. It decides for each partition from which offset it has to consume message, until offset given by Ticker actor to it.
+As shown in the diagram, Ticker Actor gets the from offset and until offset for each partition and sends it to WorkerRouter actor as an **OffsetRanges** object. WorkerRouter actor after getting message from Ticker actor, consumes the actual messages from the kafka topic using simple consumer api(**KafkaUtil.createKafkaConsumer2**). It decides for each partition from which offset it has to consume message, until offset given by Ticker actor to it.
 
 ```scala
 object WorkerRouter {
@@ -212,16 +213,13 @@ class WorkerRouter(properties: Properties, consumer: KafkaConsumer[String, Strin
 
 Worker Actor processes for each incoming messages. This implementastion can differ as per the requirement. For each incoming message, which may refer to some file can be parsed inside worker actor. 
 
-### Starting the ActorSystem
+## Launching Application
 
 ```scala
 object Boot extends App{
 
     val actorSystem = ActorSystem("router-system")
-    for (key <- properties.keySet().asScala) {
-      appLogger.info(key + "=" + properties.getProperty(key.toString()))
-    }
-
+    
     //High Level Kafka Consumer API
     val consumer = KafkaUtil.createKafkaConsumer(properties)
     val ticker = actorSystem.actorOf(Ticker.props(properties, consumer), "ticker")
