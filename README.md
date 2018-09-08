@@ -34,12 +34,12 @@ This is the actor which uses Kafka High Level Consumer API. It uses **createKafk
 object KafkaUtil {
   def createKafkaConsumer(properties: Properties): KafkaConsumer[String, String] = {
     val props = new Properties()
-    props.put("bootstrap.servers", properties.getProperty(ConfigConstants.KAFKA_BOOT_SERVERS));
-    props.put("group.id", properties.getProperty(ConfigConstants.KAFKA_GROUP_ID));
-    props.put("auto.offset.reset", "latest");
-    props.put("enable.auto.commit", "false");
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put("bootstrap.servers", properties.getProperty(ConfigConstants.KAFKA_BOOT_SERVERS))
+    props.put("group.id", properties.getProperty(ConfigConstants.KAFKA_GROUP_ID))
+    props.put("auto.offset.reset", "latest")
+    props.put("enable.auto.commit", "false")
+    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
+    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     val consumer = new KafkaConsumer[String, String](props)
     consumer.subscribe(properties.getProperty(ConfigConstants.KAFKA_TOPIC).split(",").toList.asJava)
     consumer
