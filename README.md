@@ -203,3 +203,26 @@ class WorkerRouter(properties: Properties, consumer: KafkaConsumer[String, Strin
 
 Worker Actor processes for each incoming messages. This implementastion can differ as per the requirement. For each incoming message, which may refer to some file can be parsed inside worker actor. 
 
+### Starting the ActorSystem
+
+```scala
+object Boot extends App{
+
+    val actorSystem = ActorSystem("router-system")
+    for (key <- properties.keySet().asScala) {
+      appLogger.info(key + "=" + properties.getProperty(key.toString()))
+    }
+
+    //High Level Kafka Consumer API
+    val consumer = KafkaUtil.createKafkaConsumer(properties)
+    val ticker = actorSystem.actorOf(Ticker.props(properties, consumer), "ticker")
+
+    // Simple Kafka Consumer API
+    val consumer2 = KafkaUtil.createKafkaConsumer2(properties)   
+    val workerRouter = actorSystem.actorOf(WorkerRouter.props(properties, consumer2), "workerRouter")
+
+    while (true) {}
+
+  }  
+}
+```
