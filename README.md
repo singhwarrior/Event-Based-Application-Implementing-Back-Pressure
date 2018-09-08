@@ -28,10 +28,9 @@ Above diagram contains following Actors:
 
 ### Ticker Actor 
 
-This is the actor which uses Kafka High Level Consumer API. It uses **createKafkaConsumer** function as shown in following code snnipet. Here the important point to be noted is, consumer group is required here.
+- This is the actor which uses Kafka High Level Consumer API. It uses **createKafkaConsumer** function as shown in following code snnipet. Here the important point to be noted is, consumer group is required here.
 
 ```scala
-
 object KafkaUtil {
   def createKafkaConsumer(properties: Properties): KafkaConsumer[String, String] = {
     val props = new Properties()
@@ -57,10 +56,9 @@ object KafkaUtil {
     consumer
   }  
 }
-
 ```
 
-Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. See the receive method which uses a function called 
+- Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. See the receive method which uses a function called 
 **consumeLimitedBatch()** which is explained latter.
 
 ```scala
@@ -90,9 +88,9 @@ class Ticker(properties: Properties, consumer: KafkaConsumer[String, String]) ex
   	}
 }
 ```
-At every TICK message which is sent to itself this Actor polls the Kafka Topic and does following:
+- At every TICK message which is sent to itself this Actor polls the Kafka Topic and does following:
 
-- Get the latest offset for each partion of a topic
+* Get the latest offset for each partion of a topic
 
 ```scala
   protected def latestOffsets(): Map[TopicPartition, Long] = {
@@ -109,7 +107,7 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
     parts.map(tp => tp -> c.position(tp)).toMap
   }
 ```
-- Clamps the offset to a max number of messages deifined per partition(**MAX_MESSAGES_PER_PARTITION**). That means, application must not consume more than what is defined as max limit per partition
+* Clamps the offset to a max number of messages deifined per partition(**MAX_MESSAGES_PER_PARTITION**). That means, application must not consume more than what is defined as max limit per partition
 
 ```scala
   protected def clamp(
@@ -121,7 +119,7 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
     })
   }
 ```  
-- Prepares an OffsetRanges object and send it to WorkerRouter Actor. **OffsetRanges** object contains a list of **OffsetRange** objects. Each **OffsetRange** object contains a partition of a given topic, starting offset and end offset as shown in following code snippet.
+* Prepares an OffsetRanges object and send it to WorkerRouter Actor. **OffsetRanges** object contains a list of **OffsetRange** objects. Each **OffsetRange** object contains a partition of a given topic, starting offset and end offset as shown in following code snippet.
 
 ```scala
  def consumeLimitedBatch() = {
