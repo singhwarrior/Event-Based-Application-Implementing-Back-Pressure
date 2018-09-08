@@ -134,3 +134,6 @@ Following snippet launches the Ticker Actor,
 val consumer = KafkaUtil.createKafkaConsumer(properties)
 val ticker = actorSystem.actorOf(Ticker.props(properties, consumer), "ticker")
 ```
+##### WorkerRouter Actor
+
+As shown in the diagram, Ticker Actor gets the current offset and until offset for each partition and sends it to WorkerRouter actor.
