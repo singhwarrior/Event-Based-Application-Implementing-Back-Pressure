@@ -12,6 +12,8 @@ There are farmeworks like Spark Streaming and Akka Streaming which have back pre
 
 ## Back Pressure with AKKA Actor and Kafka
 
+### Working and Implementation
+
 ![blog.jpg](blog.jpg)
 
 Above diagram contains following Actors:
