@@ -199,4 +199,7 @@ class WorkerRouter(properties: Properties, consumer: KafkaConsumer[String, Strin
 }
 ```
 
-maintains an internal map of for each partition of given topic how much messages 
+### Worker Actor
+
+Worker Actor processes for each incoming messages. This implementastion can differ as per the requirement. For each incoming message, which may refer to some file can be parsed inside worker actor. 
+
