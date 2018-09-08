@@ -17,7 +17,7 @@ Above diagram contains following Actors:
 2. WorkerRouter Actor 
 3. Worker Actor
 
-##### Ticker Actor 
+### Ticker Actor 
 
 This is the actor which uses Kafka High Level Consumer API. See below api to create a consumer using subscribe to a topic. Here the important point to be noted is, this way of creating consumer needs to mention consumer group.
 
@@ -134,6 +134,6 @@ Following snippet launches the Ticker Actor,
 val consumer = KafkaUtil.createKafkaConsumer(properties)
 val ticker = actorSystem.actorOf(Ticker.props(properties, consumer), "ticker")
 ```
-##### WorkerRouter Actor
+### WorkerRouter Actor
 
 As shown in the diagram, Ticker Actor gets the current offset and until offset for each partition and sends it to WorkerRouter actor.
