@@ -1,3 +1,3 @@
-theme: jekyll-theme-time-machine
+theme: jekyll-theme-midnight
 title: "Event Based Application:Back Pressure"
 description: "Implementation of Back Pressure using AKKA Actor and Kafka"
