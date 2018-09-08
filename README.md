@@ -21,7 +21,7 @@ Above diagram contains following Actors:
 
 This is the actor which uses Kafka High Level Consumer API. See below api to create a consumer using subscribe to a topic. Here the important point to be noted is, this way of creating consumer needs to mention consumer group.
 
-```markdown
+```scala
 object KafkaUtil {
   def createKafkaConsumer(properties: Properties): KafkaConsumer[String, String] = {
     val props = new Properties()
@@ -51,7 +51,7 @@ object KafkaUtil {
 
 It does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. 
 
-```markdown
+```scala
 object Ticker {
   def props(properties: Properties, consumer: KafkaConsumer[String, String]) = Props(new Ticker(properties, consumer))
 }
@@ -82,7 +82,7 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
 
 1. Get the latest offset for each partion of a topic
 
-```markdown
+```scala
   protected def latestOffsets(): Map[TopicPartition, Long] = {
     val c: Consumer[String, String] = consumer
     paranoidPoll(c)
@@ -100,7 +100,7 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
 
 2. Clamps the offset to a max limit deifined for a partition. That means, we application must not consume more than what is defined as max limit per partition
 
-```markdown
+```scala
   protected def clamp(
     offsets: Map[TopicPartition, Long]): Map[TopicPartition, Long] = {
 
@@ -113,7 +113,7 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
 
 3. Prepares an OffsetRanges object and send it to WorkerRouter Actor
 
-```markdown
+```scala
  def consumeLimitedBatch() = {
     val offsetRanges = new ListBuffer[OffsetRange]()
     val untilOffset = clamp(latestOffsets())
