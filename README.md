@@ -136,4 +136,67 @@ val ticker = actorSystem.actorOf(Ticker.props(properties, consumer), "ticker")
 ```
 ### WorkerRouter Actor
 
-As shown in the diagram, Ticker Actor gets the current offset and until offset for each partition and sends it to WorkerRouter actor.
+As shown in the diagram, Ticker Actor gets the current offset and until offset for each partition and sends it to WorkerRouter actor. WorkerRouter actor after getting message from Ticker actor, consumes the actual messages from the kafka topic using simple consumer api. It decides for each partition from which offset it has to consume message, until offset given by Ticker actor to it.
+
+```scala
+object WorkerRouter {
+  def props(properties: Properties, consumer: KafkaConsumer[String, String]): Props = Props(new WorkerRouter(properties, consumer))
+}
+
+class WorkerRouter(properties: Properties, consumer: KafkaConsumer[String, String]) extends Actor {
+
+  val router1: ActorRef = context.actorOf(RoundRobinPool(ConfigConstants.NO_OF_WORKERS).withSupervisorStrategy(OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 30 seconds) {
+    case _: Exception => Resume
+  }).props(Worker.props(properties)), "router1")
+
+  context.watch(router1)
+  var offsetCommited = Map[TopicPartition, Long]()
+  var partitions = ListBuffer[TopicPartition]()
+
+  override def receive = {
+    case OffsetRanges(offsetRanges) =>
+      for (offsetRange <- offsetRanges) {
+        partitions += offsetRange.tp
+        if (offsetCommited.get(offsetRange.tp).isEmpty) {
+          offsetCommited = offsetCommited + (offsetRange.tp -> offsetRange.fromOffset)
+        }
+      }
+
+      removeDisOwnedParitions()
+      consumer.assign(partitions.toList.asJava)
+
+      for (offsetRange <- offsetRanges) {
+        consumer.seek(offsetRange.tp, offsetCommited(offsetRange.tp))
+        val records = consumer.poll(1200)
+        if (!records.records(offsetRange.tp).isEmpty()) {
+          for (record <- records.records(offsetRange.tp).asScala) {
+            if (record.offset() < offsetRange.toOffset) {
+              offsetCommited = offsetCommited + (offsetRange.tp -> (record.offset() + 1))
+              //This can be stored in DB. Also we can see option when ACTOR is getting stopped, then dump all in DB. And
+              // also at restart of the system, dump to DB. This can be generalized.
+              val metaDataString = record.value()
+              router1 ! JobMessage(metaDataString)
+            }
+          }
+        }
+      }
+
+      partitions.clear()
+    case Terminated(router1) =>
+      self ! Stop
+      context.system.terminate()
+    case _ =>
+      logger.warn("Message not supported!!")
+  }
+
+  def removeDisOwnedParitions(): Unit = {
+    val ownedPartitions = partitions.toSet
+    val patitionsToBeRemoved = offsetCommited.keySet -- ownedPartitions
+
+    for (tp <- patitionsToBeRemoved)
+      offsetCommited = offsetCommited - tp
+  }
+}
+```
+
+maintains an internal map of for each partition of given topic how much messages 
