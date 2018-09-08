@@ -127,3 +127,10 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
     context.actorSelection("../workerRouter") ! OffsetRanges(offsetRanges.toList)
   }
 ```
+
+Following snippet launches the Ticker Actor,
+
+```scala
+val consumer = KafkaUtil.createKafkaConsumer(properties)
+val ticker = actorSystem.actorOf(Ticker.props(properties, consumer), "ticker")
+```
