@@ -10,7 +10,7 @@ So it is very much important, application should be able to limit the message in
 ## Farmeworks enabled with Back Pressure
 There are farmeworks like Spark Streaming and Akka Streaming which have back pressure feature available. Spark Streaming which is based on Lmabda Architecture and AKKA Streaming which is based on KAPPA Architecture, in both we can make sure that while implementing a pipeline, we can limit the rate at which we want to consume the messages.
 
-## Implementation of Back Pressure with AKKA Actor and Kafka
+## Back Pressure with AKKA Actor and Kafka
 
 ![blog.jpg](blog.jpg)
 
