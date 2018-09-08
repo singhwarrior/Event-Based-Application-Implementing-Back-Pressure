@@ -16,7 +16,7 @@ There are farmeworks like Spark Streaming and Akka Streaming which have back pre
 
 Following diagram represents the design of AKKA Actor based processing framework and KAFKA as messaging broker. 
 
-![blog.jpg](blog.jpg)
+![blog1.jpg](blog1.jpg)
 
 ### Working and Implementation
 
