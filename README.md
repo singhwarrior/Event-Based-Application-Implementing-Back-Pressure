@@ -57,8 +57,7 @@ object KafkaUtil {
   }  
 }
 ```
-<br />
-Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. See the receive method which uses a function called 
+ Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. See the receive method which uses a function called 
 **consumeLimitedBatch()** which is explained latter.
 
 ```scala
