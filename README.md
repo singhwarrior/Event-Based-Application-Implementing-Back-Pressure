@@ -30,7 +30,7 @@ Above diagram contains following Actors:
 
 This is the actor which uses Kafka High Level Consumer API. It uses **createKafkaConsumer** function as shown in following code snnipet. Here the important point to be noted is, consumer group is required here.
 
-```scala
+```
 object KafkaUtil {
   def createKafkaConsumer(properties: Properties): KafkaConsumer[String, String] = {
     val props = new Properties()
