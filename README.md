@@ -12,9 +12,13 @@ There are farmeworks like Spark Streaming and Akka Streaming which have back pre
 
 ## Back Pressure with AKKA Actor and Kafka
 
-### Working and Implementation
+### Application Design and flow
+
+Following diagram represents the design of AKKA Actor based processing framework and KAFKA as messaging broker. 
 
 ![blog.jpg](blog.jpg)
+
+### Working and Implementation
 
 Above diagram contains following Actors:
 
