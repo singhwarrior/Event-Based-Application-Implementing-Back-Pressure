@@ -9,9 +9,7 @@ So it is very much important, application should be able to limit the message in
 
 ### Implementation of Back Pressure with AKKA Actor and Kafka
 
-```markdown
 ![blog.jpg](blog.jpg)
-```
 
 Above diagram contains following Actors:
 
