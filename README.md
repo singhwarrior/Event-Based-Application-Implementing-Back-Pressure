@@ -61,20 +61,20 @@ class Ticker(properties: Properties, consumer: KafkaConsumer[String, String]) ex
 	protected var currentOffsets = Map[TopicPartition, Long]()
 
 	override def preStart = {
-    	val c = consumer
-    	paranoidPoll(c)
-    	if (currentOffsets.isEmpty) {
-      		currentOffsets = c.assignment().asScala.map { tp =>
-        		tp -> c.position(tp)
-      		}.toMap
-    	}
-    	c.pause(this.currentOffsets.keySet.toList: _*)
+    		val c = consumer
+    		paranoidPoll(c)
+    		if (currentOffsets.isEmpty) {
+      			currentOffsets = c.assignment().asScala.map { tp =>
+        			tp -> c.position(tp)
+      			}.toMap
+    		}
+    		c.pause(this.currentOffsets.keySet.toList: _*)
   	}
 
-    override def receive = {
-    	case Tick =>
-      		consumeLimitedBatch()
-      		timers.startPeriodicTimer(TickKey, Tick, ConfigConstants.TICK_INTERVAL.seconds)
+    	override def receive = {
+    		case Tick =>
+      			consumeLimitedBatch()
+      			timers.startPeriodicTimer(TickKey, Tick, ConfigConstants.TICK_INTERVAL.seconds)
   	}
 }
 ```
