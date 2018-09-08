@@ -57,7 +57,6 @@ object KafkaUtil {
   }  
 }
 ```
-
 Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. See the receive method which uses a function called 
 **consumeLimitedBatch()** which is explained latter.
 
@@ -88,7 +87,6 @@ class Ticker(properties: Properties, consumer: KafkaConsumer[String, String]) ex
   	}
 }
 ```
-
 At every TICK message which is sent to itself this Actor polls the Kafka Topic and does following:
 
 - Get the latest offset for each partion of a topic
@@ -108,7 +106,6 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
     parts.map(tp => tp -> c.position(tp)).toMap
   }
 ```
-
 - Clamps the offset to a max number of messages deifined per partition(**MAX_MESSAGES_PER_PARTITION**). That means, application must not consume more than what is defined as max limit per partition
 
 ```scala
@@ -121,7 +118,6 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
     })
   }
 ```  
-
 - Prepares an OffsetRanges object and send it to WorkerRouter Actor. **OffsetRanges** object contains a list of **OffsetRange** objects. Each **OffsetRange** object contains a partition of a given topic, starting offset and end offset as shown in following code snippet.
 
 ```scala
@@ -137,7 +133,6 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
     context.actorSelection("../workerRouter") ! OffsetRanges(offsetRanges.toList)
   }
 ```
-
 Following snippet launches the Ticker Actor,
 
 ```scala
@@ -208,7 +203,6 @@ class WorkerRouter(properties: Properties, consumer: KafkaConsumer[String, Strin
   }
 }
 ```
-
 ### Worker Actor
 
 Worker Actor processes for each incoming messages. This implementastion can differ as per the requirement. For each incoming message, which may refer to some file can be parsed inside worker actor. 
