@@ -28,7 +28,7 @@ Above diagram contains following Actors:
 
 ### Ticker Actor 
 
-This is the actor which uses Kafka High Level Consumer API. See below api to create a consumer using subscribe to a topic. Here the important point to be noted is, this way of creating consumer needs to mention consumer group.
+This is the actor which uses Kafka High Level Consumer API. It uses **createKafkaConsumer** functiom in following code snnipet. Here the important point to be noted is, consumer group is required here.
 
 ```scala
 object KafkaUtil {
@@ -58,7 +58,7 @@ object KafkaUtil {
 }
 ```
 
-It does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. 
+Ticker Actor does not actually consumes the message but it finds out the current offset and latest offset of the corresponding KAFKA Topic. Limits the number of messages to be consumed. 
 
 ```scala
 object Ticker {
@@ -90,7 +90,7 @@ class Ticker(properties: Properties, consumer: KafkaConsumer[String, String]) ex
 
 At every TICK message which is sent to itself this Actor polls the Kafka Topic and does following:
 
-1. Get the latest offset for each partion of a topic
+- Get the latest offset for each partion of a topic
 
 ```scala
   protected def latestOffsets(): Map[TopicPartition, Long] = {
@@ -108,7 +108,7 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
   }
 ```
 
-2. Clamps the offset to a max limit deifined for a partition. That means, we application must not consume more than what is defined as max limit per partition
+- Clamps the offset to a max number of messages deifined per partition(**MAX_MESSAGES_PER_PARTITION**). That means, application must not consume more than what is defined as max limit per partition
 
 ```scala
   protected def clamp(
@@ -121,7 +121,7 @@ At every TICK message which is sent to itself this Actor polls the Kafka Topic a
   }
 ```  
 
-3. Prepares an OffsetRanges object and send it to WorkerRouter Actor
+- Prepares an OffsetRanges object and send it to WorkerRouter Actor
 
 ```scala
  def consumeLimitedBatch() = {
