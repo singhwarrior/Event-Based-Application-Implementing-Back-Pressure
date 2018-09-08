@@ -9,7 +9,9 @@ So it is very much important, application should be able to limit the message in
 
 ### Implementation of Back Pressure with AKKA Actor and Kafka
 
+```markdown
 ![blog.jpg](blog.jpg)
+```
 
 Above diagram contains following Actors:
 
@@ -78,6 +80,7 @@ class Ticker(properties: Properties, consumer: KafkaConsumer[String, String]) ex
   	}
 }
 ```
+
 At every TICK message which is sent to itself this Actor polls the Kafka Topic and does following:
 
 1. Get the latest offset for each partion of a topic
