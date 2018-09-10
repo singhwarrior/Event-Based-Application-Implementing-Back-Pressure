@@ -1,8 +1,3 @@
-```markdown
-<head>
-	<meta name="google-site-verification" content="_X1bW_bF0udeSPhatd4d-CBGsEiKTVt-gHCshzch49I" />
-</head>
-```
 ## Back Pressure and its benifits
 
 All event based applications need to have an important feature of back pressure. The reason is simple, If application processing rate is slower than the rate of its consumption, it can cause following problems:
